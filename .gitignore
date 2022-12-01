@@ -3,3 +3,8 @@
 
 # Ada Library Information
 *.ali
+
+/Ada/obj/
+/Ada/bin/
+/Ada/alire/
+/Ada/config/

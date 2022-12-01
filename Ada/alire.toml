@@ -1,0 +1,9 @@
+name = "aoc"
+description = "Advent of Code"
+version = "2022.0"
+
+authors = ["Johannes Kliemann"]
+maintainers = ["Johannes Kliemann <jk@jkliemann.de>"]
+maintainers-logins = ["jklmnn"]
+
+executables = ["aoc"]
