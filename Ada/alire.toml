@@ -7,3 +7,8 @@ maintainers = ["Johannes Kliemann <jk@jkliemann.de>"]
 maintainers-logins = ["jklmnn"]
 
 executables = ["aoc"]
+[[depends-on]]
+[[depends-on]]
+basalt = "~0.2.0"
+[[depends-on]]
+gnatprove = "^12.1.1"
