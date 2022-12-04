@@ -34,7 +34,8 @@ begin
                Results (Line (Line'First), Line (Line'Last));
             Points : constant Natural := Shapes (Line (Line'Last));
             Result_2 : constant Natural := Results_2 (Line (Line'Last));
-            Points_2 : constant Natural := Shapes_2 (Line (Line'First), Line (Line'Last));
+            Points_2 : constant Natural :=
+               Shapes_2 (Line (Line'First), Line (Line'Last));
          begin
             if Natural'Last - Score > Result + Points then
                Score := Score + Result + Points;
