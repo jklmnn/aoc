@@ -6,7 +6,8 @@ project Aoc is
    for Create_Missing_Dirs use "True";
    for Exec_Dir use "bin";
    for Main use ("day_2022_1.adb",
-                 "day_2022_2.adb");
+                 "day_2022_2.adb",
+                 "day_2022_3.adb");
 
    package Compiler is
       for Default_Switches ("Ada") use Aoc_Config.Ada_Compiler_Switches;
