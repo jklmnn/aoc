@@ -24,11 +24,16 @@ is
    type Index is mod 3;
    type Line_Buffer is array (Index) of Elf_Line;
 
-   Lines : Line_Buffer;
+   Lines        : Line_Buffer;
    Priority_Sum : Natural := 0;
-   Curr : Index := 0;
+   Badge_Prio   : Natural := 0;
+   Curr         : Index := 0;
 begin
+   pragma Assert (for all I in Index'Range =>
+                  Lines (I).Last in 0 .. Lines (I).Line'Last);
    while not Ada.Text_IO.End_Of_File loop
+      pragma Loop_Invariant (for all I in Index'Range =>
+                             Lines (I).Last in 0 .. Lines (I).Line'Last);
       Ada.Text_IO.Get_Line (Lines (Curr).Line, Lines (Curr).Last);
       pragma Assert (Lines (Curr).Last in 0 .. Lines (Curr).Line'Last);
       if Lines (Curr).Last > 0 and then Lines (Curr).Last mod 2 = 0 then
@@ -41,9 +46,11 @@ begin
          begin
             Outer :
             for F of First loop
-               pragma Loop_Invariant (Lines (Curr).Last in 0 .. Lines (Curr).Line'Last);
+               pragma Loop_Invariant (Lines (Curr).Last in 0
+                                      .. Lines (Curr).Line'Last);
                for S of Second loop
-                  pragma Loop_Invariant (Lines (Curr).Last in 0 .. Lines (Curr).Line'Last);
+                  pragma Loop_Invariant (Lines (Curr).Last in 0
+                                         .. Lines (Curr).Line'Last);
                   if
                      F = S
                      and then Natural'Last - Priority_Sum > Priority (F)
@@ -57,8 +64,36 @@ begin
       else
          Ada.Text_IO.Put_Line ("Invalid contents");
       end if;
+      if Curr = Index'Last then
+         Outer_2 :
+         for
+            C1 of Lines (Curr).Line (Lines (Curr).Line'First
+                                     .. Lines (Curr).Last)
+         loop
+            for
+               C2 of Lines (Curr - 1).Line (Lines (Curr - 1).Line'First
+                                            .. Lines (Curr - 1).Last)
+            loop
+               if C1 = C2 then
+                  for
+                     C3 of Lines (Curr - 2).Line (Lines (Curr - 2).Line'First
+                                                  .. Lines (Curr - 2).Last)
+                  loop
+                     if
+                        C1 = C3
+                        and then Natural'Last - Badge_Prio > Priority (C1)
+                     then
+                        Badge_Prio := Badge_Prio + Priority (C1);
+                        exit Outer_2;
+                     end if;
+                  end loop;
+               end if;
+            end loop;
+         end loop Outer_2;
+      end if;
       pragma Assert (Lines (Curr).Last in 0 .. Lines (Curr).Line'Last);
       Curr := Curr + 1;
    end loop;
    Ada.Text_IO.Put_Line ("Priority:" & Priority_Sum'Image);
+   Ada.Text_IO.Put_Line ("Badges:" & Badge_Prio'Image);
 end Day_2022_3;
