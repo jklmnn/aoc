@@ -1,4 +1,6 @@
 with "config/aoc_config.gpr";
+with "basalt.gpr";
+
 project Aoc is
 
    for Source_Dirs use ("src/", "config/");
@@ -7,7 +9,8 @@ project Aoc is
    for Exec_Dir use "bin";
    for Main use ("day_2022_1.adb",
                  "day_2022_2.adb",
-                 "day_2022_3.adb");
+                 "day_2022_3.adb",
+                 "day_2022_4.adb");
 
    package Compiler is
       for Default_Switches ("Ada") use Aoc_Config.Ada_Compiler_Switches;

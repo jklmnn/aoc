@@ -8,7 +8,8 @@ maintainers-logins = ["jklmnn"]
 
 executables = ["aoc"]
 [[depends-on]]
-[[depends-on]]
 basalt = "~0.2.0"
-[[depends-on]]
 gnatprove = "^12.1.1"
+
+[[pins]]
+basalt = { url = "https://github.com/Componolit/basalt", branch = "legacy_spark" }
