@@ -10,7 +10,8 @@ project Aoc is
    for Main use ("day_2022_1.adb",
                  "day_2022_2.adb",
                  "day_2022_3.adb",
-                 "day_2022_4.adb");
+                 "day_2022_4.adb",
+                 "day_2022_5.adb");
 
    package Compiler is
       for Default_Switches ("Ada") use Aoc_Config.Ada_Compiler_Switches;
