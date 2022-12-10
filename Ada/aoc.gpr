@@ -25,4 +25,8 @@ project Aoc is
       for Artifacts (".") use ("share");
    end Install;
 
+   package Prove is
+      for Proof_Switches ("day_2022_5.adb") use ("--prover=z3,cvc4", "--steps=2500");
+   end Prove;
+
 end Aoc;

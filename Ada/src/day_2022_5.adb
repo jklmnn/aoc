@@ -97,35 +97,77 @@ is
                       Target => Target.Value);
    end Parse_Command;
 
+   procedure Move (Amount :        Natural;
+                   Source : in out Stack;
+                   Target : in out Stack)
+   is
+      Crate : Character;
+   begin
+      for I in Natural range 1 .. Amount loop
+         if
+            not Crates.Is_Empty (Source)
+            and then not Crates.Is_Full (Target)
+         then
+            Crates.Pop (Source, Crate);
+            Crates.Push (Target, Crate);
+         end if;
+      end loop;
+   end Move;
+
    procedure Execute_Command (Cmd :        Command;
                               S   : in out Stacks)
    is
-      Crate : Character;
    begin
       if not Cmd.Valid then
          return;
       end if;
-      for I in Natural range 1 .. Cmd.Amount loop
-         if
-            not Crates.Is_Empty (S (Cmd.Source))
-            and then not Crates.Is_Full (S (Cmd.Target))
-         then
-            Crates.Pop (S (Cmd.Source), Crate);
-            Crates.Push (S (Cmd.Target), Crate);
-         end if;
-      end loop;
+      Move (Cmd.Amount, S (Cmd.Source), S (Cmd.Target));
    end Execute_Command;
+
+   procedure Execute_Command_Order (Cmd :        Command;
+                                    S   : in out Stacks)
+   is
+      Temp  : Stack;
+   begin
+      if not Cmd.Valid then
+         return;
+      end if;
+      Move (Cmd.Amount, S (Cmd.Source), Temp);
+      Move (Cmd.Amount, Temp, S (Cmd.Target));
+   end Execute_Command_Order;
+
+   procedure Print (S : in out Stacks)
+   is
+   begin
+      for St of S loop
+         declare
+            Top : Character;
+         begin
+            if not Crates.Is_Empty (St) then
+               Crates.Pop (St, Top);
+               Ada.Text_IO.Put (Top);
+            end if;
+         end;
+      end loop;
+      Ada.Text_IO.New_Line;
+   end Print;
 
    Line : String (1 .. 128);
    Last : Natural;
-   Crate_Stacks : Stacks;
-   Command_Stage : Boolean := False;
+   Crate_Stacks   : Stacks;
+   Crate_Stacks_2 : Stacks;
+   Command_Stage  : Boolean := False;
 begin
    while not Ada.Text_IO.End_Of_File loop
       Ada.Text_IO.Get_Line (Line, Last);
       if Command_Stage then
-         Execute_Command (Parse_Command (Line (Line'First .. Last)),
-                          Crate_Stacks);
+         declare
+            Cmd : constant Command :=
+               Parse_Command (Line (Line'First .. Last));
+         begin
+            Execute_Command (Cmd ,Crate_Stacks);
+            Execute_Command_Order (Cmd, Crate_Stacks_2);
+         end;
       else
          if Last > 0 then
             Add_Stack_Line (Line (Line'First .. Last),
@@ -135,17 +177,10 @@ begin
             for S of Crate_Stacks loop
                Crates.Reversed (S);
             end loop;
+            Crate_Stacks_2 := Crate_Stacks;
          end if;
       end if;
    end loop;
-   for S of Crate_Stacks loop
-      declare
-         Top : Character;
-      begin
-         if not Crates.Is_Empty (S) then
-            Crates.Pop (S, Top);
-            Ada.Text_IO.Put_Line (String'(1 => Top));
-         end if;
-      end;
-   end loop;
+   Print (Crate_Stacks);
+   Print (Crate_Stacks_2);
 end Day_2022_5;
